@@ -2,6 +2,14 @@
 
 All notable changes to the Research Paper Factory agent system are tracked here.
 
+## [1.1.0] — 2026-02-28
+
+### Workflow-Manager Enhanced
+- **Dual-sync auto-push**: Every change now automatically syncs to BOTH the repo and VS Code user-level prompts, then pushes to GitHub — no manual steps
+- **Natural language interface**: Describe workflow changes in plain English; the Workflow-Manager interprets and executes
+- **Batch updates**: Support for applying changes across multiple agents in one operation
+- **GitHub remote**: Connected to `https://github.com/xuxiguo/Research-Factory.git`
+
 ## [1.0.0] — 2026-02-28
 
 ### Initial Release

@@ -1,0 +1,112 @@
+name: Track Agent Changes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'agents/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'agents/**'
+
+jobs:
+  track-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed agents
+        id: changes
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            CHANGED=$(git diff --name-only HEAD~1 HEAD -- agents/ | sort)
+          else
+            CHANGED=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} -- agents/ | sort)
+          fi
+          
+          echo "## Agent Changes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -z "$CHANGED" ]; then
+            echo "No agent files changed." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### Modified Agents" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "$CHANGED" | while read -r f; do
+              AGENT_NAME=$(basename "$f" .agent.md)
+              echo "- \`$AGENT_NAME\` — \`$f\`" >> $GITHUB_STEP_SUMMARY
+            done
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Agent Inventory" >> $GITHUB_STEP_SUMMARY
+          echo "| Agent | Type | User-Invokable |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|------|----------------|" >> $GITHUB_STEP_SUMMARY
+          
+          for f in agents/*.agent.md; do
+            NAME=$(basename "$f" .agent.md)
+            if grep -q "user-invokable: true" "$f"; then
+              INVOKE="Yes"
+              TYPE="Conductor"
+            else
+              INVOKE="No"
+              TYPE="Subagent"
+            fi
+            echo "| $NAME | $TYPE | $INVOKE |" >> $GITHUB_STEP_SUMMARY
+          done
+
+      - name: Validate agent frontmatter
+        run: |
+          ERRORS=0
+          for f in agents/*.agent.md; do
+            NAME=$(basename "$f")
+            
+            # Check for required frontmatter fields
+            if ! head -20 "$f" | grep -q "^description:"; then
+              echo "::error file=$f::Missing 'description' in frontmatter"
+              ERRORS=$((ERRORS + 1))
+            fi
+            if ! head -20 "$f" | grep -q "^model:"; then
+              echo "::error file=$f::Missing 'model' in frontmatter"
+              ERRORS=$((ERRORS + 1))
+            fi
+            if ! head -20 "$f" | grep -q "^tools:"; then
+              echo "::error file=$f::Missing 'tools' in frontmatter"
+              ERRORS=$((ERRORS + 1))
+            fi
+            if ! head -20 "$f" | grep -q "^user-invokable:"; then
+              echo "::error file=$f::Missing 'user-invokable' in frontmatter"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+          
+          if [ $ERRORS -gt 0 ]; then
+            echo "::warning::Found $ERRORS frontmatter issues across agent files"
+          else
+            echo "All agent files have valid frontmatter structure."
+          fi
+
+  count-agents:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Agent census
+        run: |
+          TOTAL=$(ls agents/*.agent.md 2>/dev/null | wc -l)
+          INVOKABLE=$(grep -l "user-invokable: true" agents/*.agent.md 2>/dev/null | wc -l)
+          SUBAGENTS=$((TOTAL - INVOKABLE))
+          SCRIPTS=$(ls agents/*.py 2>/dev/null | wc -l)
+          
+          echo "## Agent Census" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Count |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Total Agents | $TOTAL |" >> $GITHUB_STEP_SUMMARY
+          echo "| User-Invokable | $INVOKABLE |" >> $GITHUB_STEP_SUMMARY
+          echo "| Subagents | $SUBAGENTS |" >> $GITHUB_STEP_SUMMARY
+          echo "| Helper Scripts | $SCRIPTS |" >> $GITHUB_STEP_SUMMARY

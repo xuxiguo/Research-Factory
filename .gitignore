@@ -1,0 +1,15 @@
+# OS
+Thumbs.db
+.DS_Store
+
+# VS Code workspace storage (not user-level config)
+.specstory/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Secrets — never commit
+*.env
+.env.*

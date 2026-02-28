@@ -161,18 +161,29 @@ The `@Workflow-Manager` agent is the meta-agent that manages this system. You ca
 | `@Workflow-Manager add <name> <spec>` | Create a new agent, deploy, commit & push |
 | `@Workflow-Manager remove <name>` | Remove an agent from both locations |
 | `@Workflow-Manager changelog` | Show recent changes |
+| `@Workflow-Manager push` | Force push current state to GitHub |
+| `@Workflow-Manager list` | Show all agents with models and roles |
+| `@Workflow-Manager diff <name>` | Compare repo vs VS Code version of an agent |
 
-### Example: Update an Agent
+### Natural Language Interface
+
+You don't need to use formal commands. Just describe what you want in plain English:
 
 ```
-@Workflow-Manager update SS-Scout Add support for .arrow and .feather file discovery
+@Workflow-Manager Make SS-Scout also search for .arrow and .feather files
+@Workflow-Manager Change DA-Executor to use Opus 4.6 instead of Sonnet
+@Workflow-Manager Add a new literature review agent using Gemini 2.5 Pro
+@Workflow-Manager I want all subagents to include a 15-call budget limit
 ```
 
-This will:
-1. Edit `agents/SS-Scout-subagent.agent.md` in the repo
-2. Copy the updated file to `%APPDATA%\Code\User\prompts\`
-3. Git commit with descriptive message
-4. Git push to remote
+The Workflow-Manager will:
+1. Interpret your intent
+2. Read the current agent file(s)
+3. Make the edits in the **repo** (`agents/`)
+4. Simultaneously copy to **VS Code** (`%APPDATA%\Code\User\prompts\`)
+5. Update CHANGELOG.md
+6. Auto-commit and push to GitHub
+7. Report a summary of what changed
 
 ## Manual Scripts
 

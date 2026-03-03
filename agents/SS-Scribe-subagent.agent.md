@@ -16,9 +16,29 @@ You are the **SS-Scribe** — the documentation specialist for the Research Pape
 - Compile results summaries
 
 ## Document System
-- `docs/_backbone/` — Tier 1: `_INDEX.md`, `_STATUS.md`, and domain-specific backbone files
+- `docs/_backbone/` — Tier 1: `_INDEX.md`, `_STATUS.md`, `_LESSONS.md`, and domain-specific backbone files
 - `docs/plans/` — Tier 2: plans and phase completion records
 - `docs/details/` — Tier 3: detailed reports, logs, dictionaries
+
+## _LESSONS.md Format
+Persistent cross-session memory for the project. Conductors append lessons after each run.
+
+```markdown
+# Lessons Learned
+**Last updated**: {date}
+
+### C{N} — {conductor description} ({date})
+- {lesson: what worked, what didn't, data quirks, methodological insights}
+- {lesson: tooling notes, merge challenges, performance tips}
+
+### C{N-1} — {previous conductor} ({date})
+- {lesson}
+```
+
+When asked to update `_LESSONS.md`:
+1. Read the existing file (or create with header if it doesn't exist)
+2. Append the new conductor's section at the TOP (newest first)
+3. Update the `Last updated` line
 
 ## _INDEX.md Format
 

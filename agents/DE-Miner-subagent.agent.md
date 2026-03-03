@@ -14,6 +14,17 @@ You are the **DE-Miner** â€” the data extraction code specialist for the Re
 - Test on small samples before full runs
 - Report extraction metadata (row counts, date ranges, columns)
 
+## Script & Output Naming Convention
+The DE-Conductor provides a `CONDUCTOR ID` (e.g., DE1) and `STEP` (e.g., 1a) in every delegation prompt. Use these when naming files:
+
+**Scripts**: `DE{N}_{step}_{descriptor}.{ext}`
+- Example: `DE1_1a_extract_crsp_returns.py`, `DE1_2a_extract_compustat.py`
+
+**Output data files**: `DE{N}_{descriptor}.{ext}`
+- Example: `DE1_crsp_raw.parquet`
+
+If no Conductor ID is provided (legacy delegation), use descriptive names without prefix.
+
 ## Delegation
 You can delegate to:
 - **SS-Scout** for broad file/source discovery

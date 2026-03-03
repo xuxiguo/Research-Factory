@@ -131,17 +131,19 @@ SS-Scribe will:
 **Only after backbone sync is confirmed** → present the final summary to the user.
 
 ## Context-Inlined Delegation
-Always inline relevant context into subagent prompts:
+Always inline relevant context into subagent prompts, including the **Conductor ID** for file naming:
 ```
 1. TASK: {clear objective}
 2. CONTEXT (inlined):
    - Schema: {paste _SCHEMA.md content}
    - Source: {paste relevant source profile}
-3. COMPUTE ENVIRONMENT: {personal_computer | cluster}
-4. INPUT: {data file paths}
-5. OUTPUT: {expected deliverable and location}
-6. BUDGET: {max tool calls â€” typically 15-25}
-7. BAIL-OUT: {when to stop and return partial results}
+3. CONDUCTOR ID: {e.g., C5 or DE-WRDS}
+4. STEP: {e.g., 2a — from the plan's phase table}
+5. COMPUTE ENVIRONMENT: {personal_computer | cluster}
+6. INPUT: {data file paths}
+7. OUTPUT: {expected deliverable and location}
+8. BUDGET: {max tool calls — typically 15-25}
+9. BAIL-OUT: {when to stop and return partial results}
 ```
 
 ## Parallelism Rules
@@ -162,6 +164,29 @@ All plans in `docs/plans/` use sequential numbering: `P{NNN}-{descriptor}.md`
 - Assign the next number (e.g., if P005 exists, create P006)
 - Example: `P006-extraction-compustat.md`
 - Legacy plans without P-numbers are grandfathered; new plans MUST use the convention
+
+## Script & Output Naming Convention
+All scripts and outputs created during a conductor run use the conductor ID prefix:
+
+**Scripts**: `C{N}_{step}_{descriptor}.{ext}` or `DE{N}_{step}_{descriptor}.{ext}` for extraction
+- Examples: `DE1_1a_extract_crsp_returns.py`, `DE1_2a_clean_crsp_panel.py`
+
+**Outputs (data files)**: `C{N}_{descriptor}.{ext}` or named per schema
+- Examples: `DE1_crsp_returns_clean.parquet`
+
+**Rules**:
+- Include `CONDUCTOR ID` and `STEP` in every delegation prompt
+- Subagents (DE-Miner, DE-Refiner) must use these when naming files
+- Legacy files without prefix are grandfathered
+
+## Lessons Capture
+At the end of each conductor run (during Phase 4 backbone sync), also delegate SS-Scribe to append to `docs/_backbone/_LESSONS.md`:
+```
+### DE{N} — {extraction description} ({date})
+- {lesson 1: data quirk, API issue, coverage gap}
+- {lesson 2: processing insight, merge challenge}
+```
+This acts as persistent cross-session memory for the Strategist.
 
 ## Key Principles
 - **You orchestrate, never implement** â€” all extraction code is delegated

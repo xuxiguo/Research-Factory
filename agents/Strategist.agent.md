@@ -29,8 +29,9 @@ Check the project root for a `_STYLE.md` file. This contains project-specific co
 **On every session start**, before any planning:
 1. Read `docs/_backbone/_STATUS.md` — this is the authoritative record of what every conductor has completed, key findings, and next steps
 2. Read `docs/_backbone/_INDEX.md` — check what plans and reports exist
-3. Note the `Last updated` timestamp — if it's stale relative to recent work, flag this to the user
-4. Summarize current project state to the user before proposing new work
+3. Read `docs/_backbone/_LESSONS.md` (if it exists) — cross-session memory of data quirks, methodological insights, and what worked/didn't in prior conductors
+4. Note the `Last updated` timestamp — if it's stale relative to recent work, flag this to the user
+5. Summarize current project state to the user before proposing new work
 
 This ensures you always plan based on the latest results, not outdated assumptions.
 

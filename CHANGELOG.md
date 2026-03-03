@@ -2,6 +2,23 @@
 
 All notable changes to the Research Paper Factory agent system are tracked here.
 
+## [2026-03-03] Script/Output Naming, Cleanup Protocol, Lessons Memory
+
+### Changed
+- **DA-Conductor**: Added Script & Output Naming Convention (`C{N}_{step}_{descriptor}.ext`). Added Lessons Capture to Phase 5 backbone sync. Updated delegation template with CONDUCTOR ID and STEP fields.
+- **DE-Conductor**: Same naming convention (`DE{N}_{step}_{descriptor}.ext`). Added Lessons Capture. Updated delegation template.
+- **DA-Executor**: Added naming convention section — uses conductor prefix for scripts and output tables.
+- **DA-Builder**: Added naming convention section — uses conductor prefix for scripts and data files.
+- **DE-Miner**: Added naming convention section — uses conductor prefix for extraction scripts and data.
+- **DE-Refiner**: Added naming convention section — uses conductor prefix for processing scripts and data.
+- **SS-Janitor**: Added Superseded File Detection protocol — detects scripts replaced by conductor-prefixed versions, archives to `5-Archive/Superseded-Scripts/` instead of deleting. Added Post-Conductor Cleanup Protocol.
+- **SS-Scribe**: Added `_LESSONS.md` format and update protocol — persistent cross-session memory. Updated backbone list to include `_LESSONS.md`.
+- **Strategist**: Session Start Protocol now reads `_LESSONS.md` for cross-session memory from prior conductors.
+
+### Why
+- Scripts had no association to their conductor/phase, making the `scripts/` directory hard to navigate
+- No systematic cleanup of superseded files after new conductor runs
+- No persistent cross-session memory beyond the status tracker — lessons learned were lost between sessions
 ## [2026-03-03] Backbone Sync + Plan Naming Convention
 
 ### Changed

@@ -14,6 +14,17 @@ You are the **DA-Executor** â€” the regression and table specialist for the
 - Self-check results against expected signs from hypotheses
 - Use Stata (via stata-mcp) when available, Python (statsmodels/linearmodels) as fallback
 
+## Script & Output Naming Convention
+The DA-Conductor provides a `CONDUCTOR ID` (e.g., C5) and `STEP` (e.g., 2a) in every delegation prompt. Use these when naming files:
+
+**Scripts**: `C{N}_{step}_{descriptor}.{ext}`
+- Example: `C5_2a_crisis_regressions.do`, `C5_3a_robustness_placebo.do`
+
+**Output tables/figures**: `C{N}_{descriptor}.{ext}`
+- Example: `C5_crisis_alpha.xls`, `C5_crisis_subperiod.tex`
+
+If no Conductor ID is provided (legacy delegation), use descriptive names without prefix.
+
 ## Check _STYLE.md
 Read the project's `_STYLE.md` for table formatting conventions (separators, stars, t-stat format, panel labels). Follow those conventions exactly.
 

@@ -80,7 +80,7 @@ Timestamp: {date}
 2. Complete data dictionary via SS-Scribe
 3. Delegate to **SS-Janitor**: cleanup temp files, verify directory structure
    - Standing instruction: "Delete temp files (.aux, .log, __pycache__, .pyc, .tmp). List but don't delete: duplicate scripts, orphan files. Never touch data/raw/, output/, docs/."
-4. Create `docs/plans/extraction-complete.md`
+4. Create `docs/plans/P{NNN}-extraction-complete-{name}.md` (use next sequential P-number)
 5. Present completion summary to user with cleanup report:
 ```
 ðŸ"‹ Cleanup candidates:
@@ -99,6 +99,36 @@ Key decisions: [sources extracted, processing applied]
 Next action: Hand off to DA-Conductor
 Timestamp: {date}
 ```
+
+### Phase 4 — Backbone Sync (MANDATORY — never skip)
+After pipeline completion, and **before** presenting the final summary to the user, you MUST update the project backbone so the Strategist and other conductors see current state.
+
+Delegate to **SS-Scribe** with the Backbone Sync Protocol:
+```
+1. TASK: Backbone Sync — update _STATUS.md and _INDEX.md
+2. PROTOCOL: backbone-sync
+3. CONDUCTOR ID: {conductor name, e.g., "DE — WRDS Extraction"}
+4. STATUS: ✅ Complete (or partial status)
+5. KEY FINDINGS:
+   - {data scope: N observations, date range}
+   - {merge rates, coverage}
+   - {any data quality issues}
+6. OUTPUT FILES CREATED:
+   - {file path} | {description}
+7. DOCUMENTS CREATED:
+   - Plan: {docs/plans/P{NNN}-*.md}
+   - Data dictionary: {docs/details/*.md}
+8. NEXT STEPS: {what the DA-Conductor or Strategist should know}
+9. TIMESTAMP: {today's date}
+```
+
+SS-Scribe will:
+- Add/update a section in `_STATUS.md` for this extraction pipeline
+- Update the `Last updated` line in `_STATUS.md`
+- Register all new documents in `_INDEX.md`
+- Update the `Last updated` line in `_INDEX.md`
+
+**Only after backbone sync is confirmed** → present the final summary to the user.
 
 ## Context-Inlined Delegation
 Always inline relevant context into subagent prompts:
@@ -125,6 +155,13 @@ Detect and inline into every delegation:
 - **Personal Computer**: Run directly, Stata available, save `.dta` alongside Parquet
 - **Cluster (SLURM)**: Heavy jobs via `sbatch`, no Stata, skip `.dta`
 If user hasn't specified, ask.
+
+## Plan Naming Convention
+All plans in `docs/plans/` use sequential numbering: `P{NNN}-{descriptor}.md`
+- Before creating a new plan, scan `docs/plans/` for the highest existing `P{NNN}` number
+- Assign the next number (e.g., if P005 exists, create P006)
+- Example: `P006-extraction-compustat.md`
+- Legacy plans without P-numbers are grandfathered; new plans MUST use the convention
 
 ## Key Principles
 - **You orchestrate, never implement** â€” all extraction code is delegated

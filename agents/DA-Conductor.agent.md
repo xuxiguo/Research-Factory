@@ -111,10 +111,9 @@ Timestamp: {date}
 ```
 ### Phase 4 â€” Documentation & Cleanup
 Delegate **SS-Scribe** and **SS-Janitor** IN PARALLEL:
-1. SS-Scribe: compile results summary, data dictionary, update INDEX/STATUS
+1. SS-Scribe: compile results summary, data dictionary
 2. SS-Janitor: cleanup scripts, remove temp files, verify structure
    - Standing instruction: "Delete temp files (.aux, .log, __pycache__, .pyc, .tmp). List but don't delete: duplicate scripts, orphan files. Never touch data/raw/, output/, docs/."
-Present completion report.
 
 **Post-Phase Cleanup Scan** — Before presenting the completion report, scan the project and report clutter:
 ```
@@ -124,6 +123,37 @@ Present completion report.
   - {N} orphan files not referenced by any script
 SS-Janitor handled safe deletions. Remaining items listed above for your decision.
 ```
+
+### Phase 5 — Backbone Sync (MANDATORY — never skip)
+After documentation and cleanup, and **before** presenting the completion report to the user, you MUST update the project backbone so the Strategist and other conductors see current state.
+
+Delegate to **SS-Scribe** with the Backbone Sync Protocol:
+```
+1. TASK: Backbone Sync — update _STATUS.md and _INDEX.md
+2. PROTOCOL: backbone-sync
+3. CONDUCTOR ID: {conductor name, e.g., "Conductor 5 — Crisis Rebalancing"}
+4. STATUS: ✅ Complete (or partial status)
+5. KEY FINDINGS:
+   - {finding 1 with coefficient and significance}
+   - {finding 2}
+   - {recommendation}
+6. OUTPUT FILES CREATED:
+   - {file path} | {description}
+   - {file path} | {description}
+7. DOCUMENTS CREATED:
+   - Plan: {docs/plans/P{NNN}-*.md}
+   - Report: {docs/details/*.md}
+8. NEXT STEPS: {what the Strategist should consider next}
+9. TIMESTAMP: {today's date}
+```
+
+SS-Scribe will:
+- Add/update a section in `_STATUS.md` for this conductor with phases, key findings, output files
+- Update the `Last updated` line in `_STATUS.md`
+- Register all new documents in `_INDEX.md` (plans in Tier 2, details in Tier 3, outputs in Output Tables)
+- Update the `Last updated` line in `_INDEX.md`
+
+**Only after backbone sync is confirmed** → present the completion report to the user.
 
 ## Context-Inlined Delegation
 ```
@@ -149,6 +179,14 @@ SS-Janitor handled safe deletions. Remaining items listed above for your decisio
 ## Scribe Batching
 Do NOT call SS-Scribe after every phase. Batch ALL documentation into Phase 4.
 Exception: user explicitly asks for intermediate documentation.
+**Phase 5 (Backbone Sync) is NEVER batched or skipped** — it runs as a separate, mandatory final step.
+
+## Plan Naming Convention
+All plans in `docs/plans/` use sequential numbering: `P{NNN}-{descriptor}.md`
+- Before creating a new plan, scan `docs/plans/` for the highest existing `P{NNN}` number
+- Assign the next number (e.g., if P005 exists, create P006)
+- Example: `P006-analysis-crisis-rebalancing.md`
+- Legacy plans without P-numbers are grandfathered; new plans MUST use the convention
 
 ## Key Principles
 - **You orchestrate, never implement** â€” all code delegated

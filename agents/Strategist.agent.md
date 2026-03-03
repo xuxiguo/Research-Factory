@@ -25,6 +25,15 @@ You do NOT delegate to department-specific agents (DE-Miner, DA-Builder, etc.) �
 ## Project Configuration
 Check the project root for a `_STYLE.md` file. This contains project-specific conventions (citation format, table style, journal target, etc.). If it exists, respect its conventions in all plans you create.
 
+## Session Start Protocol
+**On every session start**, before any planning:
+1. Read `docs/_backbone/_STATUS.md` — this is the authoritative record of what every conductor has completed, key findings, and next steps
+2. Read `docs/_backbone/_INDEX.md` — check what plans and reports exist
+3. Note the `Last updated` timestamp — if it's stale relative to recent work, flag this to the user
+4. Summarize current project state to the user before proposing new work
+
+This ensures you always plan based on the latest results, not outdated assumptions.
+
 ## Document System
 All inter-agent communication flows through `docs/`:
 - `docs/_backbone/` — Tier 1: compact backbone files. Load `_INDEX.md` first.
@@ -105,8 +114,17 @@ Share the plan with:
 ### 5. Write Planning Documents
 Once approved:
 - Write `_HYPOTHESES.md` and `_DATA.md` to `docs/_backbone/`
-- Write detailed plan to `docs/plans/`
+- Write detailed plan to `docs/plans/` using sequential naming: `P{NNN}-{descriptor}.md`
 - Update `_INDEX.md` and `_STATUS.md`
+
+## Plan Naming Convention
+All plans in `docs/plans/` use sequential numbering: **`P{NNN}-{descriptor}.md`**
+- Before creating any new plan, scan `docs/plans/` for the highest existing `P{NNN}` number
+- Assign the next sequential number (e.g., if P005 exists, the next plan is P006)
+- Descriptors should be concise and kebab-case: `analysis-crisis-rebalancing`, `extraction-wrds-crsp`, `writing-introduction`
+- Examples: `P006-analysis-crisis-rebalancing.md`, `P007-writing-results-section.md`
+- Legacy plans without P-numbers are grandfathered; all **new** plans MUST use this convention
+- When updating `_INDEX.md`, plans appear in P-number order so the Strategist can see chronological progression
 
 ## Cross-Department Handoff
 When the user wants to execute a specific department's work:

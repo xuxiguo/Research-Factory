@@ -2,6 +2,17 @@
 
 All notable changes to the Research Paper Factory agent system are tracked here.
 
+## [2026-03-03] Backbone Sync + Plan Naming Convention
+
+### Changed
+- **DA-Conductor**: Added mandatory Phase 5 (Backbone Sync) — conductor must delegate to SS-Scribe to update _STATUS.md and _INDEX.md before presenting completion report to user. Added Plan Naming Convention (P{NNN}-{descriptor}.md).
+- **DE-Conductor**: Added mandatory Phase 4 (Backbone Sync) — same protocol. Updated plan file creation to use P-numbered naming. Added Plan Naming Convention.
+- **Strategist**: Added Session Start Protocol — must read _STATUS.md and _INDEX.md on every session to get latest conductor results. Added Plan Naming Convention with sequential P{NNN} numbering for all new plans.
+- **SS-Scribe**: Added Backbone Sync Protocol — explicit 3-step procedure (update _STATUS.md, update _INDEX.md, confirm) triggered when conductors delegate with PROTOCOL: backbone-sync.
+
+### Why
+- Conductors were completing work without updating backbone docs, causing the Strategist to plan based on stale status
+- Plans had inconsistent naming (no ordering), making it hard to identify the newest plan
 ## [1.1.0] — 2026-02-28
 
 ### Workflow-Manager Enhanced
